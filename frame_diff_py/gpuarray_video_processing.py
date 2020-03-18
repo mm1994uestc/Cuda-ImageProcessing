@@ -15,7 +15,7 @@ cap.set(cv.CAP_PROP_FRAME_HEIGHT,H)
 cap.set(cv.CAP_PROP_FRAME_WIDTH,W)
 
 ret, frame = cap.read()
-gray_a = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+gray_a = cv.cvtColor(frame,cv.COLOR_RGB2GRAY)
 
 img_ori_gpu = gpuarray.to_gpu(gray_a.astype(np.float32))
 img_buf_gpu = gpuarray.empty_like(img_ori_gpu)
@@ -32,7 +32,8 @@ while True:
     img_res_gpu = gpuarray.if_positive(img_buf_gpu,img_bgm,img_res_gpu)
     gray_buff = img_res_gpu.get()
     gray_buff = gray_buff.astype(np.uint8)
-    cv.imshow("Moving Detecting!",gray_buff)
+    frame = cv.cvtColor(gray_buff,cv.COLOR_GRAY2RGB)
+    cv.imshow("Moving Detecting!",frame)
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
